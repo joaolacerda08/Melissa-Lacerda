@@ -1,0 +1,19 @@
+MELISSA LACERDA — ESTÉTICA NO OLHAR
+
+Para abrir
+Abra o arquivo index.html em um navegador. As fotos usadas no site estão na pasta assets.
+
+Modelos e valores
+Os cinco modelos, preços e nomes dos arquivos de imagem estão organizados no início de app.js.
+Os nomes originais das fotos foram preservados.
+
+Contato e agendamento
+O número de WhatsApp e o link de agendamento ainda não foram fornecidos, então o site não inventa um canal de atendimento. Quando os dados oficiais estiverem disponíveis, preencha contactConfig no início de app.js:
+
+  whatsappNumber: "55DDDNUMERO",
+  bookingUrl: "https://..."
+
+Deixe um campo vazio se aquele canal não existir. O botão correspondente aparecerá automaticamente quando houver um endereço configurado.
+
+Identidade visual
+As cores, tipografia e medidas principais estão reunidas como variáveis no início de styles.css, para facilitar futuras atualizações.
