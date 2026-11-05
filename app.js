@@ -2,12 +2,39 @@
 
 document.documentElement.classList.add("js");
 
-const models = [
-  { number: "01", name: "Fox marrom", application: 170, maintenance: 115, image: "assets/IMG_1921.PNG" },
-  { number: "02", name: "Sirena marrom", application: 150, maintenance: 105, image: "assets/IMG_5110.PNG" },
-  { number: "03", name: "Fox preto", application: 170, maintenance: 115, image: "assets/IMG_5114.PNG" },
-  { number: "04", name: "Volume russo", application: 185, maintenance: 115, image: "assets/IMG_4460.PNG" },
-  { number: "05", name: "Volume brasileiro", application: 150, maintenance: 105, image: "assets/IMG_4458.PNG" }
+const categories = [
+  {
+    name: "Volume Sirena",
+    options: [
+      { id: "sirena-marrom", name: "Sirena Marrom", variation: "Marrom", application: 150, maintenance: 105, image: "assets/IMG_5110.PNG" },
+      { id: "sirena-preto", name: "Sirena Preto", variation: "Preto", application: 150, maintenance: 105, image: "assets/IMG_2889.PNG" }
+    ]
+  },
+  {
+    name: "Fox",
+    options: [
+      { id: "fox-marrom", name: "Fox Marrom", variation: "Marrom", application: 170, maintenance: 115, image: "assets/IMG_1921.PNG" },
+      { id: "fox-preto", name: "Fox Preto", variation: "Preto", application: 170, maintenance: 115, image: "assets/IMG_5114.PNG" }
+    ]
+  },
+  {
+    name: "Volume Russo",
+    options: [
+      { id: "volume-russo", name: "Volume Russo", application: 185, maintenance: 115, image: "assets/IMG_4460.PNG" }
+    ]
+  },
+  {
+    name: "Volume Brasileiro",
+    options: [
+      { id: "volume-brasileiro", name: "Volume Brasileiro", application: 150, maintenance: 105, image: "assets/IMG_4458.PNG" }
+    ]
+  },
+  {
+    name: "Brow Lamination",
+    options: [
+      { id: "brow-lamination", name: "Brow Lamination", application: 140, maintenance: null, image: "assets/IMG_2890.PNG" }
+    ]
+  }
 ];
 
 // Preencha apenas quando Melissa fornecer os canais oficiais.
@@ -19,69 +46,43 @@ const contactConfig = {
 const formatBRL = (value) => new Intl.NumberFormat("pt-BR", {
   style: "currency",
   currency: "BRL",
-  maximumFractionDigits: 0
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2
 }).format(value);
 
 const grid = document.getElementById("modelsGrid");
 const dialog = document.getElementById("modelDialog");
 const dialogImage = document.getElementById("dialogImage");
 const dialogTitle = document.getElementById("dialogTitle");
+const dialogOptions = document.getElementById("dialogOptions");
 const dialogClose = document.getElementById("dialogClose");
 const contactStatus = document.getElementById("contactStatus");
 const contactActions = document.getElementById("contactActions");
 let selectedCard = null;
+let selectedGroup = null;
 let closeAfterDialog = null;
 let isClosing = false;
 
-function makeCard(model) {
-  const button = document.createElement("button");
-  button.className = "model-card reveal";
-  button.type = "button";
-  button.setAttribute("aria-haspopup", "dialog");
-  button.setAttribute("aria-label", model.name + ". Aplicação " + formatBRL(model.application) + ", manutenção " + formatBRL(model.maintenance) + ". Ver detalhes.");
-  button.dataset.model = model.number;
-
-  const image = document.createElement("span");
-  image.className = "card-image image-frame";
+function makeImageFrame(service, className) {
+  const frame = document.createElement("span");
+  frame.className = className + " image-frame";
   const img = document.createElement("img");
-  img.src = model.image;
-  img.alt = "Registro do modelo " + model.name;
-  img.loading = "lazy";
+  img.src = service.image;
+  img.alt = "Registro do serviço " + service.name;
+  img.loading = className === "hero-photo" ? "eager" : "lazy";
   img.decoding = "async";
   img.addEventListener("error", markImageMissing, { once: true });
   const fallback = document.createElement("span");
   fallback.className = "image-fallback";
   fallback.setAttribute("aria-hidden", "true");
   fallback.innerHTML = "<span>ML</span><small>Imagem indisponível</small>";
-  const number = document.createElement("span");
-  number.className = "card-number";
-  number.setAttribute("aria-hidden", "true");
-  number.textContent = model.number;
-  const open = document.createElement("span");
-  open.className = "card-open";
-  open.setAttribute("aria-hidden", "true");
-  open.textContent = "↗";
-  image.append(img, fallback, number, open);
+  frame.append(img, fallback);
+  return frame;
+}
 
-  const content = document.createElement("span");
-  content.className = "card-content";
-  const titleRow = document.createElement("span");
-  titleRow.className = "card-title-row";
-  const title = document.createElement("span");
-  title.className = "card-title";
-  title.textContent = model.name;
-  const detail = document.createElement("span");
-  detail.className = "card-detail";
-  detail.textContent = "Ver detalhes";
-  titleRow.append(title, detail);
-
-  const prices = document.createElement("span");
-  prices.className = "card-prices";
-  prices.append(makePrice("Aplicação", model.application), makePrice("Manutenção", model.maintenance));
-  content.append(titleRow, prices);
-  button.append(image, content);
-  button.addEventListener("click", () => openModel(model, button));
-  return button;
+function markImageMissing(event) {
+  const frame = event.currentTarget.closest(".image-frame");
+  if (frame) frame.classList.add("image-missing");
 }
 
 function makePrice(label, value) {
@@ -90,24 +91,118 @@ function makePrice(label, value) {
   const small = document.createElement("small");
   small.textContent = label;
   const strong = document.createElement("strong");
-  strong.textContent = formatBRL(value);
+  strong.textContent = value === null ? "Sem manutenção" : formatBRL(value);
   wrapper.append(small, strong);
   return wrapper;
 }
 
-function markImageMissing(event) {
-  const frame = event.currentTarget.closest(".image-frame");
-  if (frame) frame.classList.add("image-missing");
+function makeCategoryCard(group, index) {
+  const representative = group.options[0];
+  const card = document.createElement("article");
+  card.className = "model-card reveal";
+
+  const image = makeImageFrame(representative, "card-image");
+  const number = document.createElement("span");
+  number.className = "card-number";
+  number.setAttribute("aria-hidden", "true");
+  number.textContent = String(index + 1).padStart(2, "0");
+  image.append(number);
+
+  const content = document.createElement("div");
+  content.className = "card-content";
+  const titleRow = document.createElement("div");
+  titleRow.className = "card-title-row";
+  const title = document.createElement("span");
+  title.className = "card-title";
+  title.textContent = group.name;
+  const detail = document.createElement("span");
+  detail.className = "card-detail";
+  detail.textContent = group.options.length > 1 ? "Escolha a cor" : "Serviço";
+  titleRow.append(title, detail);
+  content.append(titleRow);
+
+  if (group.options.length > 1) {
+    const picker = document.createElement("div");
+    picker.className = "variation-picker";
+    picker.setAttribute("aria-label", "Variações de " + group.name);
+    group.options.forEach((service) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "variation-button";
+      button.setAttribute("aria-label", service.name + ". Aplicação " + formatBRL(service.application) + ", manutenção " + formatBRL(service.maintenance) + ". Ver detalhes.");
+      const name = document.createElement("span");
+      name.textContent = service.variation;
+      const price = document.createElement("span");
+      price.className = "variation-price";
+      const application = document.createElement("strong");
+      application.textContent = "Aplicação " + formatBRL(service.application);
+      const maintenance = document.createElement("span");
+      maintenance.textContent = "Manutenção " + formatBRL(service.maintenance);
+      price.append(application, maintenance);
+      button.append(name, price);
+      button.addEventListener("click", () => openService(service, group, button));
+      picker.append(button);
+    });
+    content.append(picker);
+  } else {
+    const service = group.options[0];
+    const prices = document.createElement("div");
+    prices.className = "card-prices";
+    prices.append(makePrice("Aplicação", service.application));
+    if (service.maintenance !== null) prices.append(makePrice("Manutenção", service.maintenance));
+    else prices.append(makePrice("Manutenção", null));
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "service-select";
+    button.textContent = "Ver detalhes  ↗";
+    button.setAttribute("aria-label", "Ver detalhes de " + service.name);
+    button.addEventListener("click", () => openService(service, group, button));
+    content.append(prices, button);
+  }
+
+  card.append(image, content);
+  return card;
 }
 
-document.querySelectorAll(".image-frame img").forEach((image) => {
-  image.addEventListener("error", markImageMissing, { once: true });
-  if (image.complete && image.naturalWidth === 0) {
-    image.closest(".image-frame").classList.add("image-missing");
-  }
-});
+grid.append(...categories.map(makeCategoryCard));
 
-grid.append(...models.map(makeCard));
+function renderDialog(service, group, preserveOptionFocus = false) {
+  dialogTitle.textContent = service.name;
+  dialogImage.src = service.image;
+  dialogImage.alt = "Registro do serviço " + service.name;
+  dialogImage.closest(".image-frame").classList.remove("image-missing");
+  document.getElementById("dialogCategory").textContent = group.options.length > 1 ? group.name + " · Escolha de cor" : "Serviço";
+  document.getElementById("dialogApplication").textContent = formatBRL(service.application);
+  document.getElementById("dialogMaintenance").textContent = service.maintenance === null ? "Sem manutenção" : formatBRL(service.maintenance);
+
+  const rule = document.getElementById("maintenanceRule");
+  if (service.maintenance === null) {
+    rule.textContent = "Brow Lamination não possui manutenção.";
+  } else {
+    rule.textContent = "A manutenção é cobrada e pode ser feita em até 21 dias, se menos de 40% dos cílios tiverem caído. A avaliação é feita pela profissional. Com 40% ou mais de queda, ou após 21 dias, é cobrado o valor de uma nova aplicação.";
+  }
+
+  dialogOptions.replaceChildren();
+  if (group.options.length > 1) {
+    dialogOptions.hidden = false;
+    group.options.forEach((option) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "dialog-option";
+      button.textContent = option.variation;
+      button.setAttribute("aria-pressed", String(option.id === service.id));
+      button.setAttribute("aria-label", "Selecionar " + option.name);
+      button.addEventListener("click", () => renderDialog(option, group, true));
+      dialogOptions.append(button);
+    });
+    if (preserveOptionFocus) {
+      const activeOption = dialogOptions.querySelector('[aria-pressed="true"]');
+      if (activeOption) activeOption.focus({ preventScroll: true });
+    }
+  } else {
+    dialogOptions.hidden = true;
+  }
+}
 
 function animateFromCard(card) {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || typeof dialog.animate !== "function") return;
@@ -121,23 +216,18 @@ function animateFromCard(card) {
   ], { duration: 480, easing: "cubic-bezier(.2,.75,.25,1)" });
 }
 
-function openModel(model, card) {
-  selectedCard = card;
+function openService(service, group, origin) {
+  selectedCard = origin;
+  selectedGroup = group;
   closeAfterDialog = null;
   isClosing = false;
-  dialogTitle.textContent = model.name;
-  dialogImage.src = model.image;
-  dialogImage.alt = "Registro do modelo " + model.name;
-  dialogImage.closest(".image-frame").classList.remove("image-missing");
-  document.getElementById("dialogNumber").textContent = model.number;
-  document.getElementById("dialogApplication").textContent = formatBRL(model.application);
-  document.getElementById("dialogMaintenance").textContent = formatBRL(model.maintenance);
+  renderDialog(service, group);
   dialog.showModal();
-  animateFromCard(card);
+  animateFromCard(origin);
   dialogClose.focus({ preventScroll: true });
 }
 
-function closeModel() {
+function closeService() {
   if (!dialog.open || isClosing) return;
   isClosing = true;
   if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches && typeof dialog.animate === "function" && selectedCard) {
@@ -159,13 +249,13 @@ function closeModel() {
   }
 }
 
-dialogClose.addEventListener("click", closeModel);
+dialogClose.addEventListener("click", closeService);
 dialog.addEventListener("cancel", (event) => {
   event.preventDefault();
-  closeModel();
+  closeService();
 });
 dialog.addEventListener("click", (event) => {
-  if (event.target === dialog) closeModel();
+  if (event.target === dialog) closeService();
 });
 dialog.addEventListener("close", () => {
   isClosing = false;
@@ -180,7 +270,7 @@ dialog.addEventListener("close", () => {
 document.getElementById("dialogContact").addEventListener("click", (event) => {
   event.preventDefault();
   closeAfterDialog = "contact";
-  closeModel();
+  closeService();
 });
 
 function configureContact() {

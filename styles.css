@@ -1,17 +1,17 @@
 /* Identidade visual: atualize estes tokens quando as cores oficiais forem definidas. */
 :root {
   color-scheme: light;
-  --paper: #f8f5ef;
-  --cream: #fffdf9;
+  --paper: #F7F4EF;
+  --cream: #FFFFFF;
   --white: #ffffff;
-  --ink: #382d28;
-  --cocoa: #60483d;
+  --ink: #3C2B23;
+  --cocoa: #6B4635;
   --muted: #786d66;
-  --clay: #b9684e;
-  --clay-dark: #98503b;
-  --clay-pale: #f1e2d9;
-  --gold: #c4a77d;
-  --line: #e7dfd6;
+  --clay: #6B4635;
+  --clay-dark: #5B392C;
+  --clay-pale: #E8DDCE;
+  --gold: #B08D57;
+  --line: #E8DDCE;
   --shadow: 0 24px 70px rgb(60 43 33 / 11%);
   --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
   --sans: "Aptos", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
@@ -70,6 +70,7 @@ h1 em, h2 em { color: var(--clay); font-weight: 400; }
   align-items: center; justify-content: space-between; margin-inline: auto;
 }
 .brand { display: inline-flex; align-items: center; gap: 11px; min-width: 190px; }
+.brand-logo { display: block; width: 158px; max-height: 62px; object-fit: contain; object-position: left center; }
 .brand-mark {
   display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid var(--gold);
   border-radius: 50%; color: var(--clay-dark); font-family: var(--serif); font-size: 19px;
@@ -88,6 +89,7 @@ h1 em, h2 em { color: var(--clay); font-weight: 400; }
 .nav-cta:hover { background: var(--clay); color: white; }
 .nav-cta span { font-size: 15px; }
 .menu-toggle { display: none; }
+.hero-logo { display: block; width: min(245px, 75%); height: auto; margin: 0 0 22px; }
 
 /* Abertura */
 .hero {
@@ -162,7 +164,7 @@ h1 em, h2 em { color: var(--clay); font-weight: 400; }
 .models-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px 22px; }
 .model-card {
   display: flex; width: 100%; min-width: 0; flex-direction: column; padding: 0; overflow: hidden;
-  border: 1px solid transparent; background: var(--cream); text-align: left; cursor: pointer;
+  border: 1px solid transparent; background: var(--cream); text-align: left;
   box-shadow: 0 5px 23px rgb(64 47 37 / 4%);
   transition: transform .32s cubic-bezier(.2,.75,.25,1), box-shadow .32s ease, border-color .25s ease;
 }
@@ -186,6 +188,17 @@ h1 em, h2 em { color: var(--clay); font-weight: 400; }
 .card-price { display: grid; gap: 0; }
 .card-price small { color: var(--muted); font-size: 9px; letter-spacing: .06em; text-transform: uppercase; }
 .card-price strong { color: var(--ink); font-family: var(--serif); font-size: 17px; font-weight: 500; }
+.variation-picker { display: grid; gap: 8px; margin-top: 16px; }
+.variation-button, .service-select {
+  display: flex; width: 100%; min-height: 48px; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 9px 12px; border: 1px solid var(--line); background: #fffefa; color: var(--ink); cursor: pointer;
+  text-align: left; transition: border-color .2s, background .2s, transform .2s;
+}
+.variation-button:hover, .service-select:hover { border-color: var(--gold); background: var(--paper); transform: translateX(2px); }
+.variation-button span:first-child { font-family: var(--serif); font-size: 14px; }
+.variation-price { display: grid; gap: 1px; color: var(--muted); font-size: 9px; line-height: 1.35; text-align: right; }
+.variation-price strong { color: var(--clay-dark); font-size: 10px; font-weight: 700; }
+.service-select { justify-content: center; margin-top: 15px; color: var(--clay-dark); font-size: 10px; font-weight: 700; letter-spacing: .04em; }
 .gallery-note { display: flex; align-items: center; gap: 9px; margin: 30px 0 0; color: var(--muted); font-size: 11px; }
 .gallery-note span { color: var(--gold); }
 
@@ -206,7 +219,7 @@ h1 em, h2 em { color: var(--clay); font-weight: 400; }
 .about-copy .text-link { margin-top: 27px; }
 
 /* Dúvidas */
-.faq-section { background: #f2ece4; }
+.faq-section { background: var(--clay-pale); }
 .faq-layout { display: grid; grid-template-columns: .82fr 1.18fr; gap: clamp(50px, 10vw, 140px); }
 .faq-heading h2 { max-width: 390px; }
 .faq-heading > p:last-child { max-width: 300px; margin: 18px 0 0; color: var(--muted); font-size: 13px; line-height: 1.8; }
@@ -227,7 +240,7 @@ h1 em, h2 em { color: var(--clay); font-weight: 400; }
 .contact-copy, .contact-details { position: relative; z-index: 1; }
 .eyebrow-light { color: #dfc4a1; }
 .contact-copy h2 { max-width: 530px; color: white; font-size: clamp(39px, 5vw, 62px); }
-.contact-copy h2 em { color: #dfad91; }
+.contact-copy h2 em { color: #E8DDCE; }
 .contact-intro { max-width: 380px; margin: 21px 0 0; color: #d0c5be; font-size: 13px; line-height: 1.8; }
 .contact-details { align-self: center; padding: 28px; border: 1px solid rgb(255 255 255 / 19%); background: rgb(255 255 255 / 3%); }
 .contact-detail { display: flex; align-items: flex-start; gap: 15px; }
@@ -284,6 +297,13 @@ h1 em, h2 em { color: var(--clay); font-weight: 400; }
 .dialog-prices > div { display: grid; gap: 3px; padding: 13px 14px; border: 1px solid var(--line); background: #fffefa; }
 .dialog-prices small { color: var(--muted); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
 .dialog-prices strong { color: var(--ink); font-family: var(--serif); font-size: 22px; font-weight: 500; }
+.dialog-options { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 19px; }
+.dialog-options[hidden] { display: none !important; }
+.dialog-option {
+  min-height: 38px; padding: 0 14px; border: 1px solid var(--line); background: transparent;
+  color: var(--cocoa); font-size: 10px; cursor: pointer;
+}
+.dialog-option[aria-pressed="true"], .dialog-option:hover { border-color: var(--gold); background: var(--clay-pale); }
 .maintenance-note { display: flex; align-items: flex-start; gap: 11px; margin-top: 17px; padding: 13px 14px; background: #f2ece4; }
 .maintenance-icon { display: grid; width: 18px; height: 18px; flex: 0 0 18px; place-items: center; border: 1px solid var(--gold); border-radius: 50%; color: var(--clay-dark); font-family: var(--serif); font-size: 12px; }
 .maintenance-note p { margin: 0; color: #685c54; font-size: 10px; line-height: 1.65; }
@@ -312,6 +332,7 @@ h1 em, h2 em { color: var(--clay); font-weight: 400; }
   .site-header { height: 70px; }
   .header-inner { width: calc(100% - 40px); }
   .brand { min-width: 0; }
+  .brand-logo { width: 132px; max-height: 54px; }
   .brand-mark { width: 35px; height: 35px; }
   .menu-toggle {
     display: flex; width: 42px; height: 42px; flex-direction: column; align-items: center;
@@ -333,6 +354,7 @@ h1 em, h2 em { color: var(--clay); font-weight: 400; }
   }
   .hero-copy { max-width: 590px; }
   .hero-copy .eyebrow { margin-bottom: 19px; }
+  .hero-logo { width: 205px; margin-bottom: 18px; }
   .hero h1 { max-width: 570px; font-size: clamp(45px, 12vw, 69px); }
   .hero-intro { max-width: 450px; margin-top: 19px; font-size: 14px; }
   .hero-actions { gap: 21px; margin-top: 26px; }
@@ -382,6 +404,7 @@ h1 em, h2 em { color: var(--clay); font-weight: 400; }
   .dialog-photo img { min-height: 0; }
   .dialog-copy { padding: 23px 22px 25px; }
   .dialog-copy .eyebrow { margin-bottom: 10px; font-size: 9px; }
+  .dialog-options { margin-top: 12px; }
   .dialog-copy h2 { font-size: clamp(33px, 9vw, 43px); }
   .dialog-lead { margin-top: 8px; font-size: 11px; }
   .dialog-prices { gap: 9px; margin-top: 15px; }

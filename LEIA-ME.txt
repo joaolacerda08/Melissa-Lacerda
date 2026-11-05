@@ -1,11 +1,17 @@
-MELISSA LACERDA — ESTÉTICA NO OLHAR
+MELISSA LACERDA — ESTÉTICA DO OLHAR
 
 Para abrir
 Abra o arquivo index.html em um navegador. As fotos usadas no site estão na pasta assets.
 
 Modelos e valores
-Os cinco modelos, preços e nomes dos arquivos de imagem estão organizados no início de app.js.
-Os nomes originais das fotos foram preservados.
+Categorias, opções, preços e nomes dos arquivos de imagem estão organizados no início de app.js.
+Os nomes originais das fotos foram preservados. A logo original está em assets/LogotipoML.png e a versão recortada para o cabeçalho está em assets/LogotipoML-recortado.png.
+
+Localização
+Granvitta Barreiro, Belo Horizonte, MG — Sala 617.
+
+Manutenção
+A manutenção é cobrada e pode ser feita em até 21 dias se menos de 40% dos cílios tiverem caído. A avaliação é feita pela profissional. Com 40% ou mais de queda, ou após 21 dias, é cobrado o valor de uma nova aplicação. Brow Lamination não possui manutenção.
 
 Contato e agendamento
 O número de WhatsApp e o link de agendamento ainda não foram fornecidos, então o site não inventa um canal de atendimento. Quando os dados oficiais estiverem disponíveis, preencha contactConfig no início de app.js:
